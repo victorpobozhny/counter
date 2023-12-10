@@ -6,7 +6,7 @@ import {Screen} from "./Screen";
 function App() {
 
     const minState = 0
-    const maxState = 5
+    const maxState = 7
 
     const [count, setCount] = useState<number>(minState)
 
@@ -23,7 +23,7 @@ function App() {
     return (
         <div className="App">
             <div className={'counter'}>
-                <Screen count={count}/>
+                <Screen count={count} maxState={maxState}/>
                 <div className={'btnWrapper'}>
                     <Button name={'inc'} onClick={increaseClick} disabled={count == maxState}/>
                     <Button name={'reset'} onClick={resetState} disabled={count == minState}/>
