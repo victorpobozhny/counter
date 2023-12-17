@@ -1,3 +1,7 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .App {
     height: 100vh;
     background-color: #212122;
@@ -5,18 +9,22 @@
     justify-content: center;
     align-items: center;
 }
-.counter {
-    width: 300px;
-    height: 270px;
+
+.counter, .settings {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 420px;
+    height: 330px;
     background-color: #212122;
     font-family: "Comic Sans MS", sans-serif;
     font-weight: bold;
     font-size: 36px;
     padding: 20px;
+    margin: 20px;
     border: 5px solid #65d8fd;
     border-radius: 15px;
 }
-
 
 .screen {
     height: 150px;
@@ -26,7 +34,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
     font-size: 64px;
 }
 
@@ -53,3 +60,52 @@
     border: none;
     border-radius: 15px;
 }
+
+/*------------------Settings---------------*/
+.settings {
+
+}
+
+.inputsWrapper {
+    height: 150px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: self-start;
+    font-size: 64px;
+    border: 3px solid #65d8fd;
+}
+
+.inputItem {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px;
+    width: 350px;
+}
+
+.inputName {
+    color: #65d8fd;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    width: 140px;
+    padding-left: 10px;
+}
+
+.input {
+    display: flex;
+    justify-content: flex-end;
+    margin: auto;
+}
+
+.input > input {
+    height: 40px;
+    width: 120px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    background-color:  #65d8fd;
+}
+

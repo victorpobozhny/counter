@@ -1,34 +1,65 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {Button} from "./Button";
-import {Screen} from "./Screen";
+import Counter from "./Counter";
+import Settings from "./Settings";
 
 function App() {
 
-    const minState = 0
-    const maxState = 7
-
-    const [count, setCount] = useState<number>(minState)
 
 
+    useEffect(() => {
+        let startValueAsString = localStorage.getItem('startValue')
+        if (startValueAsString) {
+            let newValue = JSON.parse(startValueAsString)
+            setStartValue(newValue)
+        }
+        let MaxValueAsString = localStorage.getItem('maxValue')
+        if (MaxValueAsString) {
+            let newValue = JSON.parse(MaxValueAsString)
+            setMaxValue(newValue)
+        }
+    }, [])
+
+    const [startValue, setStartValue] = useState(0)
+    const [maxValue, setMaxValue] = useState(5)
+
+
+    const [count, setCount] = useState<number>(startValue)
+    const changeValues = (name: string, value: number) => {
+        name == 'max value' ? setMaxValue(value) : setStartValue(value)
+
+    }
+    const setRange = () => {
+        localStorage.setItem('maxValue', JSON.stringify(maxValue))
+        localStorage.setItem('startValue', JSON.stringify(startValue))
+    }
     const increaseClick = () => {
-        if (count < maxState) {
+        if (count < maxValue) {
             setCount(count + 1)
         }
     }
     const resetState = () => {
-        setCount(minState)
+        setCount(startValue)
     }
 
     return (
         <div className="App">
-            <div className={'counter'}>
-                <Screen count={count} maxState={maxState}/>
-                <div className={'btnWrapper'}>
-                    <Button name={'inc'} onClick={increaseClick} disabled={count == maxState}/>
-                    <Button name={'reset'} onClick={resetState} disabled={count == minState}/>
-                </div>
-            </div>
+            <Settings
+                startValue={startValue}
+                maxValue={maxValue}
+                setRange={setRange}
+                changeValues={changeValues}
+            />
+
+            <Counter
+                count={count}
+                maxValue={maxValue}
+                resetState={resetState}
+                increaseClick={increaseClick}
+                startValue={startValue}
+            />
+
+
         </div>
     );
 }
