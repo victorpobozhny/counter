@@ -37,9 +37,18 @@
     font-size: 64px;
 }
 
+.setMode {
+    font-size: 24px;
+}
+
 .red {
     color: red;
     font-size: 78px;
+}
+
+.redError {
+    color: red;
+    font-size: 36px;
 }
 
 .btnWrapper {
@@ -93,13 +102,13 @@
     padding-left: 10px;
 }
 
-.input {
+.inputWrapper {
     display: flex;
     justify-content: flex-end;
     margin: auto;
 }
 
-.input > input {
+.input {
     height: 40px;
     width: 120px;
     border-radius: 8px;
@@ -107,5 +116,11 @@
     font-weight: bold;
     font-size: 24px;
     background-color:  #65d8fd;
+    outline: none;
+    border: none;
+}
+
+.input.error {
+    background-color: #f64b4b;
 }
 
