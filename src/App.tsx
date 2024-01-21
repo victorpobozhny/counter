@@ -1,101 +1,100 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
-import Counter from "./Counter";
-import Settings from "./Settings";
+import {Counter} from "./Counter";
+import {Settings} from "./Settings";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./redux/store";
+import {
+    setCommonErrorAC,
+    setCountAC,
+    setMaxValueAC,
+    setSettingModeAC,
+    setStartValueAC,
+    StateType
+} from "./redux/counter-reducer";
 
 function App() {
     console.log('rendering')
+    const dispatch = useDispatch()
+    const state = useSelector<AppRootStateType, StateType>(state => state.counter)
 
-    const [startValue, setStartValue] = useState(0)
-    const [maxValue, setMaxValue] = useState(5)
 
     // один раз вызыввем useEffect и присваиваем максимальные и минимальные значения взяв их из localstorage если есть
     useEffect(() => {
         let startValueAsString = localStorage.getItem('startValue')
         if (startValueAsString) {
             let newValue = JSON.parse(startValueAsString)
-            setStartValue(newValue)
+            dispatch(setStartValueAC(newValue))
             resetState()
         }
         let MaxValueAsString = localStorage.getItem('maxValue')
         if (MaxValueAsString) {
             let newValue = JSON.parse(MaxValueAsString)
-            setMaxValue(newValue)
+            dispatch(setMaxValueAC(newValue))
         }
     }, [])
 
 
-    //для экрана отображающего текущее значение счетчика
-    const [count, setCount] = useState<number>(startValue)
-    //для ошибки по всем вводам
-    const [commonError, setCommonError] = useState(false)
-    //режим настройки нашего счетчика. изначально отключен. когда включается, то на экране надпись и раздизэйбл кнопки set
-    const [settingMode, setSettingMode] = useState(true)
-
-
     const checkForError = (min: number, max: number) => {
-        if(min>=max || min<0 ){
-            setCommonError(true)
+        if (min >= max || min < 0) {
+            dispatch(setCommonErrorAC(true))
         } else {
-            setCommonError(false)
+            dispatch(setCommonErrorAC(false))
         }
     }
 
     //функция изменения наших вводимых значений без добавления в localstorage
     const changeRange = (name: string, value: number) => {
         if (name == 'max value') {
-            checkForError(startValue ,value)
-            setMaxValue(value)
+            checkForError(state.startValue, state.maxValue)
+            dispatch(setMaxValueAC(value))
         } else {
-            checkForError(value, maxValue)
-            setStartValue(value)
+            checkForError(value, state.maxValue)
+            dispatch(setStartValueAC(value))
         }
-
-        setSettingMode(true)
+        dispatch(setSettingModeAC(true))
     }
     //функция установки наших значений в localstorage, также выключает режим настройки и сбрасывает счетчик на нновое мин значение
     const setRange = () => {
-        if(!commonError) {
-            localStorage.setItem('maxValue', JSON.stringify(maxValue))
-            localStorage.setItem('startValue', JSON.stringify(startValue))
-            setSettingMode(false)
+        if (!state.commonError) {
+            localStorage.setItem('maxValue', JSON.stringify(state.maxValue))
+            localStorage.setItem('startValue', JSON.stringify(state.startValue))
+            dispatch(setSettingModeAC(false))
             resetState()
         }
-
     }
     //клик который увеличивает число на экране
     const increaseClick = () => {
-        if (count < maxValue) {
-            setCount(count + 1)
+        if (state.count < state.maxValue) {
+            dispatch(setCountAC(state.count + 1))
         }
     }
 
-
     //сброс значчения на экране
     const resetState = () => {
-        setCount(startValue)
+        dispatch(setCountAC(state.startValue))
     }
 
     return (
         <div className="App">
             <Settings
-                startValue={startValue}
-                maxValue={maxValue}
+                startValue={state.startValue}
+                maxValue={state.maxValue}
                 setRange={setRange}
                 changeRange={changeRange}
-                error={commonError}
-                settingMode={settingMode}
+                error={state.commonError}
+                settingMode={state.settingMode}
             />
 
 
             <Counter
-                count={count}
-                maxValue={maxValue}
+                count={state.count}
+                maxValue={state.maxValue}
                 resetState={resetState}
                 increaseClick={increaseClick}
-                startValue={startValue}
-                settingMode={settingMode}
-                error={commonError}
+                startValue={state.startValue}
+                settingMode={state.settingMode}
+                error={state.commonError}
             />
         </div>
     );

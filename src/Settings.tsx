@@ -1,4 +1,4 @@
-import React, {FC, useMemo} from 'react';
+import React, {FC, memo} from 'react';
 import {Button} from "./Button";
 import Inputs from "./Inputs";
 
@@ -11,14 +11,13 @@ type SettingsProps = {
     settingMode: boolean
 }
 
-
-const Settings: FC<SettingsProps> = ({
-                                         maxValue,
-                                         startValue,
-                                         setRange, changeRange,
-                                         error,
-                                         settingMode
-                                     }) => {
+export const Settings: FC<SettingsProps> = memo(({
+                                                     maxValue,
+                                                     startValue,
+                                                     setRange, changeRange,
+                                                     error,
+                                                     settingMode
+                                                 }) => {
     console.log('settings')
     const onClickHandler = () => {
         setRange()
@@ -33,6 +32,4 @@ const Settings: FC<SettingsProps> = ({
             </div>
         </div>
     );
-};
-
-export default Settings;
+})

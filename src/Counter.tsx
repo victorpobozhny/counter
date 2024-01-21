@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, memo} from 'react';
 import {Screen} from "./Screen";
 import {Button} from "./Button";
 
@@ -12,7 +12,7 @@ type CounterProps = {
     error: boolean
 }
 
-const Counter: FC<CounterProps> = ({count, maxValue, startValue, increaseClick, resetState, settingMode, error}) => {
+export const Counter: FC<CounterProps> = memo(({count, maxValue, startValue, increaseClick, resetState, settingMode, error}) => {
     console.log('counter')
     return (
         <div className={'counter'}>
@@ -23,6 +23,5 @@ const Counter: FC<CounterProps> = ({count, maxValue, startValue, increaseClick, 
             </div>
         </div>
     );
-};
+})
 
-export default Counter;
