@@ -1,3 +1,5 @@
+import {AppRootStateType, AppThunk} from "./store";
+
 const initialState: StateType = {
     startValue: 0,
     maxValue: 5,
@@ -82,4 +84,62 @@ export const setSettingModeAC = (value: boolean) => {
             value
         }
     } as const
+}
+
+export const checkForErrorTC = (min: number, max: number):AppThunk=>
+    (dispatch,
+    getState: ()=>AppRootStateType)=> {
+        if (min >= max || min < 0) {
+            dispatch(setCommonErrorAC(true))
+        } else {
+            dispatch(setCommonErrorAC(false))
+        }
+    }
+
+export const changeRangeTC = (name: string, value: number): AppThunk=>
+    (dispatch,
+    getState: ()=>AppRootStateType) => {
+        if (name == 'max value') {
+            checkForErrorTC(getState().counter.startValue, getState().counter.maxValue)
+            dispatch(setMaxValueAC(value))
+        } else {
+            checkForErrorTC(value, getState().counter.maxValue)
+            dispatch(setStartValueAC(value))
+        }
+        dispatch(setSettingModeAC(true))
+    }
+
+export const increaseClickTC = (): AppThunk=>
+    (dispatch,
+     getState: ()=>AppRootStateType)=>{
+        if (getState().counter.count < getState().counter.maxValue) {
+            dispatch(setCountAC(getState().counter.count + 1))
+        }
+    }
+
+export const setStateTC = (): AppThunk=> (
+    dispatch,
+    getState: ()=>AppRootStateType)=>{
+    let startValueAsString = localStorage.getItem('startValue')
+    if (startValueAsString) {
+        let newValue = JSON.parse(startValueAsString)
+        dispatch(setStartValueAC(newValue))
+        dispatch(setCountAC(getState().counter.startValue))
+    }
+    let MaxValueAsString = localStorage.getItem('maxValue')
+    if (MaxValueAsString) {
+        let newValue = JSON.parse(MaxValueAsString)
+        dispatch(setMaxValueAC(newValue))
+    }
+}
+
+export const setRangeTC = (): AppThunk => (
+    dispatch,
+    getState: ()=>AppRootStateType) => {
+    if (!getState().counter.commonError) {
+        localStorage.setItem('maxValue', JSON.stringify(getState().counter.maxValue))
+        localStorage.setItem('startValue', JSON.stringify(getState().counter.startValue))
+        dispatch(setSettingModeAC(false))
+        dispatch(setCountAC(getState().counter.startValue))
+    }
 }
