@@ -5,7 +5,6 @@ import {Settings} from "./Settings";
 import {useAppDispatch, useAppSelector} from "./redux/store";
 import {
     changeRangeTC,
-    checkForErrorTC,
     increaseClickTC,
     setCountAC,
     setRangeTC,
@@ -24,11 +23,6 @@ function App() {
         dispatch(setStateTC())
     }, [])
 
-
-    const checkForError = (min: number, max: number) => {
-        dispatch(checkForErrorTC(min, max))
-    }
-
     //функция изменения наших вводимых значений без добавления в localstorage
     const changeRange = (name: string, value: number) => {
         dispatch(changeRangeTC(name, value))
@@ -44,13 +38,13 @@ function App() {
 
     //сброс значчения на экране
     const resetState = () => {
-        dispatch(setCountAC(state.startValue))
+        dispatch(setCountAC(state.minValue))
     }
 
     return (
         <div className="App">
             <Settings
-                startValue={state.startValue}
+                minValue={state.minValue}
                 maxValue={state.maxValue}
                 setRange={setRange}
                 changeRange={changeRange}
@@ -64,7 +58,7 @@ function App() {
                 maxValue={state.maxValue}
                 resetState={resetState}
                 increaseClick={increaseClick}
-                startValue={state.startValue}
+                minValue={state.minValue}
                 settingMode={state.settingMode}
                 error={state.commonError}
             />

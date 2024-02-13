@@ -4,7 +4,7 @@ import Inputs from "./Inputs";
 
 type SettingsProps = {
     maxValue: number
-    startValue: number
+    minValue: number
     setRange: () => void
     changeRange: (name: string, value: number) => void
     error: boolean
@@ -13,7 +13,7 @@ type SettingsProps = {
 
 export const Settings: FC<SettingsProps> = memo(({
                                                      maxValue,
-                                                     startValue,
+                                                     minValue,
                                                      setRange, changeRange,
                                                      error,
                                                      settingMode
@@ -26,7 +26,7 @@ export const Settings: FC<SettingsProps> = memo(({
 
     return (
         <div className={'settings'}>
-            <Inputs maxValue={maxValue} startValue={startValue} changeRange={changeRange} error={error}/>
+            <Inputs maxValue={maxValue} minValue={minValue} changeRange={changeRange} error={error}/>
             <div className={'btnWrapper'}>
                 <Button name={'set'} onClick={onClickHandler} disabled={!settingMode || error}/>
             </div>
