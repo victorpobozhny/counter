@@ -2,13 +2,32 @@ import {ActionType, counterReducer} from "./counter-reducer";
 import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {thunk, ThunkAction} from "redux-thunk";
+import {loadState, saveState} from "../utils/counter-utils";
 
 const rootReducer = combineReducers({
     counter: counterReducer
 })
 
 
-export const store = legacy_createStore(rootReducer, applyMiddleware(thunk))
+const persistedState = loadState();
+
+export const store = legacy_createStore(rootReducer,persistedState, applyMiddleware(thunk))
+
+store.subscribe(() => {
+    saveState({
+       counter: {
+           minValue: store.getState().counter.minValue,
+           maxValue: store.getState().counter.maxValue,
+           count: store.getState().counter.count,
+           commonError: store.getState().counter.commonError,
+           settingMode: store.getState().counter.settingMode
+       }
+    });
+});
+
+
+
+
 
 
 export type AppRootStateType = ReturnType<typeof store.getState>

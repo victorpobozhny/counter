@@ -15,18 +15,11 @@ export type StateType = {
     settingMode: boolean
 }
 export type ActionType =
-    SetStartValueACType
-    | SetMaxValueACType
-    | SetCountACType
-
-    | SetSettingModeACType
-|ReturnType<typeof checkForErrorAC>
-type SetStartValueACType = ReturnType<typeof setStartValueAC>
-type SetMaxValueACType = ReturnType<typeof setMaxValueAC>
-type SetCountACType = ReturnType<typeof setCountAC>
-
-type SetSettingModeACType = ReturnType<typeof setSettingModeAC>
-
+    ReturnType<typeof setStartValueAC>
+    | ReturnType<typeof setMaxValueAC>
+    | ReturnType<typeof setCountAC>
+    | ReturnType<typeof setSettingModeAC>
+    | ReturnType<typeof checkForErrorAC>
 
 export const counterReducer = (state: StateType = initialState, action: ActionType): StateType => {
     switch (action.type) {
@@ -39,9 +32,9 @@ export const counterReducer = (state: StateType = initialState, action: ActionTy
         case "SET-SETTING-MODE":
             return {...state, settingMode: action.payload.value}
         case "CHECK-FOR-ERROR":
-             if (action.payload.min >= action.payload.max || action.payload.min < 0){
-                 return {...state, commonError: true}
-             } else return {...state, commonError: false}
+            if (action.payload.min >= action.payload.max || action.payload.min < 0) {
+                return {...state, commonError: true}
+            } else return {...state, commonError: false}
 
         default:
             return state
@@ -81,18 +74,16 @@ export const setSettingModeAC = (value: boolean) => {
         }
     } as const
 }
-
-export const checkForErrorAC = (min: number, max: number)=>
-{
+export const checkForErrorAC = (min: number, max: number) => {
     return {
         type: "CHECK-FOR-ERROR",
         payload: {min, max}
     } as const
 }
 
-export const changeRangeTC = (name: string, value: number): AppThunk=>
+export const changeRangeTC = (name: string, value: number): AppThunk =>
     (dispatch,
-    getState: ()=>AppRootStateType) => {
+     getState: () => AppRootStateType) => {
         if (name == 'max value') {
             dispatch(checkForErrorAC(getState().counter.minValue, value))
             dispatch(setMaxValueAC(value))
@@ -103,31 +94,31 @@ export const changeRangeTC = (name: string, value: number): AppThunk=>
         dispatch(setSettingModeAC(true))
     }
 
-export const increaseClickTC = (): AppThunk=>
+export const increaseClickTC = (): AppThunk =>
     (dispatch,
-     getState: ()=>AppRootStateType)=>{
+     getState: () => AppRootStateType) => {
         if (getState().counter.count < getState().counter.maxValue) {
             dispatch(setCountAC(getState().counter.count + 1))
         }
     }
 
-export const setStateTC = (): AppThunk=> (
-    dispatch,
-    getState: ()=>AppRootStateType)=>{
-    let state = localStorage.getItem('counter')
-    if (state) {
-        const stateObj = JSON.parse(state)
-        dispatch(setMaxValueAC(JSON.parse(stateObj.maxValue)))
-        dispatch(setStartValueAC(JSON.parse(stateObj.minValue)))
-        dispatch(setCountAC(getState().counter.minValue))
-    }
-}
+// export const setStateTC = (): AppThunk => (
+//     dispatch,
+//     getState: () => AppRootStateType) => {
+//     let state = localStorage.getItem('counter')
+//     if (state) {
+//         const stateObj = JSON.parse(state)
+//         dispatch(setMaxValueAC(JSON.parse(stateObj.maxValue)))
+//         dispatch(setStartValueAC(JSON.parse(stateObj.minValue)))
+//         dispatch(setCountAC(getState().counter.minValue))
+//     }
+// }
 
 export const setRangeTC = (): AppThunk => (
     dispatch,
-    getState: ()=>AppRootStateType) => {
+    getState: () => AppRootStateType) => {
     if (!getState().counter.commonError) {
-        localStorage.setItem('counter', JSON.stringify({maxValue: getState().counter.maxValue, minValue: getState().counter.minValue}))
+        //localStorage.setItem('counter', JSON.stringify({maxValue: getState().counter.maxValue, minValue: getState().counter.minValue}))
         dispatch(setSettingModeAC(false))
         dispatch(setCountAC(getState().counter.minValue))
     }
